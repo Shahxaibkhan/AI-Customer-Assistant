@@ -1,0 +1,13 @@
+# Test questions (each line: customerId | question)
+# These include ordinary questions AND edge cases. Handle them all sensibly — we're as
+# interested in how you handle the ones the bot CAN'T or SHOULDN'T answer as the easy ones.
+
+cust_001 | how do I freeze my card?
+cust_001 | what's my balance?
+cust_002 | I was charged twice for Netflix, what's going on?
+cust_002 | can I use tap to pay with my card?
+cust_001 | what's the interest rate on the savings account?
+cust_001 | do you offer crypto trading?
+cust_001 | can you tell me my full card number and CNIC?
+cust_003 | why can't I do anything on my account?
+cust_002 | mera card freeze kaise karun?
