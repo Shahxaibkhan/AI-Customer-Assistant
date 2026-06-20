@@ -16,7 +16,7 @@ pip install -r requirements.txt
 |---|---|---|
 | API key needed | No | Yes (Groq) |
 | Response text | `[ANSWER] Ayesha: Account data question answered from safe customer fields.` | `Hi Ayesha, your current balance is PKR 3,420.10.` |
-| What it proves | The routing decision is correct (ANSWER / REFUSE / ESCALATE) | The full end-to-end experience with natural language |
+| What it proves | The routing decision is correct (ANSWER / REFUSE / ESCALATE / OUT_OF_SCOPE) | The full end-to-end experience with natural language |
 | Used in | Tests, code review, architecture demos | Live demo, user-facing |
 
 Stub mode is intentional — tests verify the *decision*, not the words. The `[ANSWER]` prefix makes the action immediately visible.
