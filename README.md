@@ -26,20 +26,18 @@ Stub mode is intentional — tests verify the *decision*, not the words. The `[A
 ### Run tests (no API key needed)
 
 ```bash
-pytest tests/ -v
+python -m pytest tests/ -v
 ```
 
 19 tests, all stubs, runs in under a second.
 
 Each test prints the exact decision made — question, customer, action, and reason — so you can see what the engine decided, not just that it passed.
 
-### Generate test report
+### Test report
 
-```bash
-pytest tests/ -v --html=report.html --self-contained-html
-```
+A custom `report.html` is generated automatically every time the tests run — no extra flags needed. Open it in a browser after running tests.
 
-Opens as a standalone HTML file. Shows all 19 tests grouped by category (Security, Policy, Account Data, Escalation, Language, Retriever) with stats cards, decision details per test, and color-coded action badges (ANSWER / REFUSE / ESCALATE / OUT_OF_SCOPE).
+It shows all 19 tests grouped by category (Security, Policy, Account Data, Escalation, Language, Retriever) with stats cards, decision details per test, and color-coded action badges (ANSWER / REFUSE / ESCALATE / OUT_OF_SCOPE).
 
 ### View pipeline logs
 
