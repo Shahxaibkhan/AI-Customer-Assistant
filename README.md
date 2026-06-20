@@ -31,6 +31,34 @@ pytest tests/ -v
 
 19 tests, all stubs, runs in under a second.
 
+Each test prints the exact decision made — question, customer, action, and reason — so you can see what the engine decided, not just that it passed.
+
+### Generate test report
+
+```bash
+pytest tests/ -v --html=report.html --self-contained-html
+```
+
+Opens as a standalone HTML file. Shows all 19 tests grouped by category (Security, Policy, Account Data, Escalation, Language, Retriever) with stats cards, decision details per test, and color-coded action badges (ANSWER / REFUSE / ESCALATE / OUT_OF_SCOPE).
+
+### View pipeline logs
+
+Every question asked through the web UI or `run_questions.py` is logged to `logs/bot.log` with a unique request ID tracing all four stages:
+
+```
+[a1b2c3d4] REQUEST    customer='cust_001'  question='how do I freeze my card?'
+[a1b2c3d4] KB_MATCH   sections=['Freezing / unfreezing a card']
+[a1b2c3d4] DECISION   action=ANSWER  type=POLICY  language=en
+[a1b2c3d4] LLM_PROMPT ...exact text sent to LLM...
+[a1b2c3d4] LLM_REPLY  (1.2s)  "Hi Ayesha, to freeze your card..."
+[a1b2c3d4] DONE
+```
+
+Live tail:
+```bash
+Get-Content logs\bot.log -Wait   # PowerShell
+```
+
 ### Run the web UI — stub mode (no API key needed)
 
 ```bash
@@ -77,24 +105,29 @@ python run_questions.py            # real LLM (needs key in .env)
 ```
 support-bot/
 ├── materials/
-│   ├── knowledge.md       # Approved help-center content (the only policy the bot may state)
-│   ├── customers.json     # Mock account data — safe vs restricted split
-│   └── questions.txt      # Test questions including edge cases
+│   ├── knowledge.md            # Approved help-center content
+│   ├── customers.json          # Mock account data — safe vs restricted split
+│   └── questions.txt           # Test questions including edge cases
 ├── src/
-│   ├── models.py          # Data types: Action, Decision, Customer, KnowledgeSection
-│   ├── loader.py          # Parse customers.json and knowledge.md
-│   ├── retriever.py       # Keyword-based KB retrieval
-│   ├── decision_engine.py # All safety logic — pure code, no LLM
-│   ├── formatter.py       # StubFormatter (tests) + GroqFormatter (production)
-│   └── bot.py             # Orchestrates the four-stage pipeline
+│   ├── models.py               # Data types: Action, Decision, Customer, KnowledgeSection
+│   ├── loader.py               # Parse customers.json and knowledge.md
+│   ├── retriever.py            # Keyword-based KB retrieval
+│   ├── decision_engine.py      # All safety logic — pure code, no LLM
+│   ├── formatter.py            # StubFormatter (tests) + GroqFormatter (production)
+│   ├── bot.py                  # Orchestrates the four-stage pipeline
+│   └── logger.py               # Structured logging — console + rotating file
 ├── tests/
-│   ├── conftest.py
-│   ├── test_decision_engine.py   # Core behaviour tests
-│   └── test_retriever.py         # Retrieval correctness tests
-├── web_chat.py            # Flask web UI
-├── run_questions.py       # CLI batch runner
-├── DECISIONS.md           # Every meaningful design choice, justified
-└── DESIGN.md              # Part 2 — scalable governed data layer
+│   ├── conftest.py             # Fixtures + custom HTML report generator
+│   ├── test_decision_engine.py # 14 decision engine behaviour tests
+│   └── test_retriever.py       # 5 retrieval correctness tests
+├── logs/                       # Pipeline traces per request (gitignored)
+├── web_chat.py                 # Flask web UI (stub or Groq mode)
+├── run_questions.py            # CLI — runs all questions from questions.txt
+├── pytest.ini                  # Logging config for test output
+├── .env.example                # Template — copy to .env and add your key
+├── requirements.txt
+├── DECISIONS.md                # Every meaningful design choice, justified
+└── DESIGN.md                   # Part 2 — scalable governed data layer
 ```
 
 ## Architecture
